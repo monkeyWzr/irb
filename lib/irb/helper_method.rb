@@ -19,8 +19,11 @@ module IRB
     end
 
     # Default helper_methods
+    require_relative "helper_method/conf"
     require_relative "helper_method/context"
+    require_relative "helper_method/irb_context"
     register(:conf, HelperMethod::Conf)
     register(:context, HelperMethod::Context)
+    register(:irb_context, HelperMethod::IrbContext)
   end
 end

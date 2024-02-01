@@ -18,18 +18,7 @@ module IRB # :nodoc:
     # See #install_alias_method.
     OVERRIDE_ALL = 0x02
 
-    # Displays current configuration.
-    #
-    # Modifying the configuration is achieved by sending a message to IRB.conf.
-    def irb_context
-      IRB.CurrentContext
-    end
-
-    @ALIASES = [
-      [:context, :irb_context, NO_OVERRIDE],
-      [:conf, :irb_context, NO_OVERRIDE],
-    ]
-
+    @ALIASES = []
 
     @EXTEND_COMMANDS = [
       [
