@@ -307,6 +307,7 @@ module IRB # :nodoc:
     def self.install_helper_methods
       HelperMethod.helper_methods.each do |name, helper_method_class|
         define_method name do |*args, **opts, &block|
+          verbose, $VERBOSE = $VERBOSE, nil
           helper_ivar = "@_helper_method_#{name}".to_sym
           helper = instance_variable_get(helper_ivar)
 
@@ -316,6 +317,8 @@ module IRB # :nodoc:
           end
 
           helper.execute(*args, **opts, &block)
+        ensure
+          $VERBOSE = verbose
         end
       end
     end
