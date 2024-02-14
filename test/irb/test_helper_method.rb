@@ -62,4 +62,39 @@ module TestIRB
       end
     end
   end
+
+  class HelperMethodIntegrationTest < IntegrationTestCase
+    def test_arguments_propogation
+      write_ruby <<~RUBY
+        require "irb/helper_method"
+
+        class MyHelper < IRB::HelperMethod::Base
+          description "This is a test helper"
+
+          def execute(
+            required_arg, optional_arg = nil, *splat_arg, required_keyword_arg:,
+            optional_keyword_arg: nil, **double_splat_arg, &block_arg
+          )
+            puts [required_arg, optional_arg, splat_arg, required_keyword_arg, optional_keyword_arg, double_splat_arg, block_arg.call].to_s
+          end
+        end
+
+        IRB::HelperMethod.register(:my_helper, MyHelper)
+
+        binding.irb
+      RUBY
+
+      output = run_ruby_file do
+        type <<~INPUT
+          my_helper(
+            "required", "optional", "splat", required_keyword_arg: "required",
+            optional_keyword_arg: "optional", a: 1, b: 2
+          ) { "block" }
+        INPUT
+        type "exit"
+      end
+
+      assert_include(output, '["required", "optional", ["splat"], "required", "optional", {:a=>1, :b=>2}, "block"]')
+    end
+  end
 end
