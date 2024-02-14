@@ -13,7 +13,7 @@ module IRB
 
       def all_helper_methods_info
         @helper_methods.map do |name, helper_class|
-          { display_name: name, description: helper_class.description, category: helper_class.category }
+          { display_name: name, description: helper_class.description }
         end
       end
     end
